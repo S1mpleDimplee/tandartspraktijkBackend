@@ -25,15 +25,14 @@ $data = json_decode(file_get_contents('php://input'), true);
 $function = $data['function'] ?? '';
 
 // Route to the appropriate function
-switch($function) {
+switch ($function) {
     case 'addUser':
-        addUser($data, $conn);
         break;
-    
+
     case 'loginUser':
         loginUser($data, $conn);
         break;
-    
+
     default:
         echo json_encode(["success" => false, "message" => "Function not found"]);
         break;
@@ -41,17 +40,18 @@ switch($function) {
 
 // FUNCTIONS
 
-function addUser($data, $conn) {
+function addUser($data, $conn)
+{
     $name = $data['name'] ?? '';
     $email = $data['email'] ?? '';
     $password = $data['password'] ?? '';
-    
+
     // Hash password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
+
     // Insert user into database
     $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$hashedPassword')";
-    
+
     if (mysqli_query($conn, $sql)) {
         echo json_encode([
             "success" => true,
@@ -66,17 +66,18 @@ function addUser($data, $conn) {
     }
 }
 
-function loginUser($data, $conn) {
+function loginUser($data, $conn)
+{
     $email = $data['email'] ?? '';
     $password = $data['password'] ?? '';
-    
+
     // Get user from database
     $sql = "SELECT id, name, email, password FROM users WHERE email = '$email'";
     $result = mysqli_query($conn, $sql);
-    
+
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
-        
+
         // Verify password
         if (password_verify($password, $user['password'])) {
             echo json_encode([
