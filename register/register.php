@@ -11,96 +11,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Database connection
-$conn = mysqli_connect("localhost", "root", "", "tandartspraktijk");
+$connection = mysqli_connect("localhost", "root", "", "tandartspraktijk");
 
-// Check connection
-if (!$conn) {
+// Check if there us connection with database ifnot log error
+if (!$connection) {
+    error_log("Connection failed: " . mysqli_connect_error());
     die(json_encode(["success" => false, "message" => "Connection failed"]));
 }
 
-// Get JSON input
 $data = json_decode(file_get_contents('php://input'), true);
 
 // Get the function name from the request
 $function = $data['function'] ?? '';
 
-// Route to the appropriate function
-switch($function) {
+// Check which function to call
+switch ($function) {
     case 'addUser':
-        addUser($data, $conn);
+        addUser($data, $connection);
         break;
-    
     case 'loginUser':
-        loginUser($data, $conn);
         break;
-    
     default:
         echo json_encode(["success" => false, "message" => "Function not found"]);
+        error_log("Function not found: " . $function);
         break;
 }
 
-// FUNCTIONS
-
-function addUser($data, $conn) {
+function addUser($data, $conn)
+{
     $name = $data['name'] ?? '';
     $email = $data['email'] ?? '';
     $password = $data['password'] ?? '';
-    
-    // Hash password
+
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
-    // Insert user into database
+
     $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$hashedPassword')";
-    
-    if (mysqli_query($conn, $sql)) {
-        echo json_encode([
-            "success" => true,
-            "message" => "User registered successfully",
-            "userId" => mysqli_insert_id($conn)
-        ]);
-    } else {
-        echo json_encode([
-            "success" => false,
-            "message" => "Registration failed"
-        ]);
-    }
+
+    mysqli_query($conn, $sql);
+
+    echo json_encode([
+        "success" => mysqli_affected_rows($conn) > 0,
+        "message" => mysqli_affected_rows($conn) > 0 ? "User registered successfully" : "Registration failed",
+        "userId" => mysqli_insert_id($conn)
+    ]);
 }
 
-function loginUser($data, $conn) {
-    $email = $data['email'] ?? '';
-    $password = $data['password'] ?? '';
-    
-    // Get user from database
-    $sql = "SELECT id, name, email, password FROM users WHERE email = '$email'";
-    $result = mysqli_query($conn, $sql);
-    
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        
-        // Verify password
-        if (password_verify($password, $user['password'])) {
-            echo json_encode([
-                "success" => true,
-                "message" => "Login successful",
-                "user" => [
-                    "id" => $user['id'],
-                    "name" => $user['name'],
-                    "email" => $user['email']
-                ]
-            ]);
-        } else {
-            echo json_encode([
-                "success" => false,
-                "message" => "Wrong password"
-            ]);
-        }
-    } else {
-        echo json_encode([
-            "success" => false,
-            "message" => "User not found"
-        ]);
-    }
-}
-
-mysqli_close($conn);
+mysqli_close($connection);
 ?>
