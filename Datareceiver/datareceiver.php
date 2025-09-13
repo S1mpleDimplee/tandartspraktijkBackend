@@ -28,16 +28,15 @@ $function = $data['function'] ?? '';
 
 // Check which function to call
 switch ($function) {
-
     case 'addUser':
         addUser($data, $connection);
         error_log("Function called: " . $function);
         break;
     case 'loginUser':
+        checkLogin($data, $connection);
         break;
     default:
         echo json_encode(["success" => false, "message" => "Function not found"]);
-        error_log("Function not found: " . $function);
         break;
 }
 ?>
