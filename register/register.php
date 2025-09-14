@@ -1,54 +1,43 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Content-Type: application/json");
 
-// Handle preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-// Database connection
-$connection = mysqli_connect("localhost", "root", "", "tandartspraktijk");
-
-// Check if there us connection with database ifnot log error
-if (!$connection) {
-    error_log("Connection failed: " . mysqli_connect_error());
-    die(json_encode(["success" => false, "message" => "Connection failed"]));
-}
-
-$data = json_decode(file_get_contents('php://input'), true);
-
-// Get the function name from the request
-$function = $data['function'] ?? '';
-
-// Check which function to call
-switch ($function) {
-    case 'addUser':
-        addUser($data, $connection);
-        break;
-    case 'loginUser':
-        break;
-    default:
-        echo json_encode(["success" => false, "message" => "Function not found"]);
-        error_log("Function not found: " . $function);
-        break;
+function checkIfEmailExists($email, $conn)
+{
+    $sql = "SELECT * FROM users WHERE email='$email'";
+    $result = mysqli_query($conn, $sql);
+    return mysqli_num_rows($result) > 0;
 }
 
 function addUser($data, $conn)
 {
-    $name = $data['name'] ?? '';
-    $email = $data['email'] ?? '';
-    $password = $data['password'] ?? '';
+    $firstName = $data['firstName'] ?? null;
+    $lastName = $data['lastName'] ?? null;
+    $email = $data['email'] ?? null;
+    $password = $data['password'] ?? null;
 
+    // First check if email is already in use if so succes = false and return a error message
+    if (checkIfEmailExists($email, $conn)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Dit email adress is al geregistreerd, probeer een andere"
+        ]);
+        return;
+    }
+
+    // If any of the fields are empty return an error message
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Alle velden zijn verplicht"
+        ]);
+        return;
+    }
+
+    // Hases the passowrd
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$hashedPassword')";
+    $sql = "INSERT INTO users (firstname, lastname, email, password) VALUES ('$firstName', '$lastName', '$email', '$hashedPassword')";
 
     mysqli_query($conn, $sql);
-
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
         "message" => mysqli_affected_rows($conn) > 0 ? "User registered successfully" : "Registration failed",
@@ -56,5 +45,38 @@ function addUser($data, $conn)
     ]);
 }
 
-mysqli_close($connection);
+function checkLogin($data, $conn)
+{
+    $email = $data['email'] ?? null;
+    $password = $data['password'] ?? null;
+
+    $sql = "SELECT * FROM users WHERE email='$email'";
+
+    $result = mysqli_query($conn, $sql);
+
+    $user = mysqli_fetch_assoc($result);
+
+    // $loggedInData = getLoginData($data, $conn);
+    // if (is_null($email)) {
+    //     echo json_encode([
+    //         "success" => false,
+    //         "message" => "Email bestaat niet"
+    //     ]);
+    // }
+
+    if ($user && password_verify($password, $user['password'])) {
+        echo json_encode([
+            "success" => true,
+            "message" => "Login successful",
+            "userId" => $user['id'], // Returns the user ID upon successful login to fetch the rest of user data
+            // "LoggedInData" => $loggedInData
+        ]);
+    } else {
+        echo json_encode([
+            "success" => false,
+            "message" => "Email of wachtwoord is onjuist, probeer het opnieuw"
+        ]);
+    }
+}
+
 ?>
