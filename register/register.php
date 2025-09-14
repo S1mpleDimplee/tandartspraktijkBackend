@@ -54,14 +54,14 @@ function checkLogin($data, $conn)
     $result = mysqli_query($conn, $sql);
     $user = mysqli_fetch_assoc(result: $result);
 
-    $loggedInData = getLoginData($data, $conn);
+    // $loggedInData = getLoginData($data, $conn);
 
     if ($user && password_verify($password, $user['password'])) {
         echo json_encode([
             "success" => true,
             "message" => "Login successful",
             "userId" => $user['id'],
-            "LoggedInData" => $loggedInData
+            // "LoggedInData" => $loggedInData
         ]);
     } else {
         echo json_encode([
