@@ -47,14 +47,21 @@ function addUser($data, $conn)
 
 function checkLogin($data, $conn)
 {
-    $email = $data['email'] ?? '';
-    $password = $data['password'] ?? '';
+    $email = $data['email'] ?? null;
+    $password = $data['password'] ?? null;
 
     $sql = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($conn, $sql);
     $user = mysqli_fetch_assoc(result: $result);
 
     // $loggedInData = getLoginData($data, $conn);
+
+    // if (is_null($email)) {
+    //     echo json_encode([
+    //         "success" => false,
+    //         "message" => "Email bestaat niet"
+    //     ]);
+    // }
 
     if ($user && password_verify($password, $user['password'])) {
         echo json_encode([
@@ -66,7 +73,7 @@ function checkLogin($data, $conn)
     } else {
         echo json_encode([
             "success" => false,
-            "message" => "Email of wachtwoord is onjuist"
+            "message" => "Email of wachtwoord is onjuist, probeer het opnieuw"
         ]);
     }
 }

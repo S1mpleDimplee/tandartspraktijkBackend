@@ -35,6 +35,8 @@ switch ($function) {
     case 'loginUser':
         checkLogin($data, $connection);
         break;
+    case 'fetchUserData':
+        getUserData($data, $connection);
     default:
         echo json_encode(["success" => false, "message" => "Function not found"]);
         break;

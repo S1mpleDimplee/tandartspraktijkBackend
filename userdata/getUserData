@@ -1,0 +1,31 @@
+<?php
+function getUserData($data, $conn)
+{
+    $email = $data['email'] ?? null;
+
+    if (is_null($email)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Email niet gevonden"
+        ]);
+        return;
+    }
+
+    $sql = "SELECT * FROM users WHERE email='$email'";
+
+    $result = mysqli_query($conn, $sql);
+    $user = mysqli_fetch_assoc($result);
+
+    if ($user) {
+        echo json_encode([
+            "success" => true,
+            "data" => $user
+        ]);
+    } else {
+        echo json_encode([
+            "success" => false,
+            "message" => "Geen gebruiker gevonden"
+        ]);
+    }
+}
+?>
