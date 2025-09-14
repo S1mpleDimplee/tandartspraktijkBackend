@@ -9,11 +9,12 @@ function checkIfEmailExists($email, $conn)
 
 function addUser($data, $conn)
 {
-    $firstName = $data['firstName'] ?? '';
-    $lastName = $data['lastName'] ?? '';
-    $email = $data['email'] ?? '';
-    $password = $data['password'] ?? '';
+    $firstName = $data['firstName'] ?? null;
+    $lastName = $data['lastName'] ?? null;
+    $email = $data['email'] ?? null;
+    $password = $data['password'] ?? null;
 
+    // First check if email is already in use if so succes = false and return a error message
     if (checkIfEmailExists($email, $conn)) {
         echo json_encode([
             "success" => false,
@@ -22,6 +23,7 @@ function addUser($data, $conn)
         return;
     }
 
+    // If any of the fields are empty return an error message
     if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
         echo json_encode([
             "success" => false,
@@ -30,14 +32,12 @@ function addUser($data, $conn)
         return;
     }
 
-
-
+    // Hases the passowrd
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     $sql = "INSERT INTO users (firstname, lastname, email, password) VALUES ('$firstName', '$lastName', '$email', '$hashedPassword')";
 
     mysqli_query($conn, $sql);
-
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
         "message" => mysqli_affected_rows($conn) > 0 ? "User registered successfully" : "Registration failed",
@@ -51,11 +51,12 @@ function checkLogin($data, $conn)
     $password = $data['password'] ?? null;
 
     $sql = "SELECT * FROM users WHERE email='$email'";
+
     $result = mysqli_query($conn, $sql);
-    $user = mysqli_fetch_assoc(result: $result);
+
+    $user = mysqli_fetch_assoc($result);
 
     // $loggedInData = getLoginData($data, $conn);
-
     // if (is_null($email)) {
     //     echo json_encode([
     //         "success" => false,
@@ -67,7 +68,7 @@ function checkLogin($data, $conn)
         echo json_encode([
             "success" => true,
             "message" => "Login successful",
-            "userId" => $user['id'],
+            "userId" => $user['id'], // Returns the user ID upon successful login to fetch the rest of user data
             // "LoggedInData" => $loggedInData
         ]);
     } else {
@@ -78,28 +79,4 @@ function checkLogin($data, $conn)
     }
 }
 
-
-function getLoginData($data, $conn)
-{
-    $email = $data['email'] ?? '';
-
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($conn, $sql);
-    $user = mysqli_fetch_assoc(result: $result);
-
-    if ($user) {
-        echo json_encode([
-            "success" => true,
-            "userId" => $user['id'],
-            "firstName" => $user['firstname'],
-            "lastName" => $user['lastname'],
-            "email" => $user['email']
-        ]);
-    } else {
-        echo json_encode([
-            "success" => false,
-            "message" => "User not found"
-        ]);
-    }
-}
 ?>
