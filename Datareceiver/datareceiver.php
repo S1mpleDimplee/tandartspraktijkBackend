@@ -23,14 +23,20 @@ if (!$connection) {
 
 $data = json_decode(file_get_contents('php://input'), true);
 
+if (!$data) {
+    error_log("Invalid JSON input");
+    die(json_encode(["success" => false, "message" => "Invalid JSON input"]));
+}
+
 // Get the function name from the request
 $function = $data['function'] ?? '';
+
+$data = $data['data'] ?? [];
 
 // Check which function to call
 switch ($function) {
     case 'addUser':
         addUser($data, $connection);
-        error_log("Function called: " . $function);
         break;
     case 'loginUser':
         checkLogin($data, $connection);

@@ -14,6 +14,8 @@ function addUser($data, $conn)
     $email = $data['email'] ?? null;
     $password = $data['password'] ?? null;
 
+    // Removed print_r($data) to ensure valid JSON response
+
     // First check if email is already in use if so succes = false and return a error message
     if (checkIfEmailExists($email, $conn)) {
         echo json_encode([
@@ -68,8 +70,12 @@ function checkLogin($data, $conn)
         echo json_encode([
             "success" => true,
             "message" => "Login successful",
-            "userId" => $user['id'], // Returns the user ID upon successful login to fetch the rest of user data
-            // "LoggedInData" => $loggedInData
+            "data" => [
+                "id" => $user['id'],
+                "firstName" => $user['firstname'],
+                "lastName" => $user['lastname'],
+                "email" => $user['email']
+            ],
         ]);
     } else {
         echo json_encode([
