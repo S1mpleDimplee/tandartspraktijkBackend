@@ -12,13 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+
 // Database connection
 $connection = mysqli_connect("localhost", "root", "", "tandartspraktijk");
 
 // Check if there us connection with database ifnot log error
 if (!$connection) {
     error_log("Connection failed: " . mysqli_connect_error());
-    die(json_encode(["success" => false, "message" => "Connection failed"]));
+    die(json_encode(["success" => false, "message" => "Connection with DB Failed"]));
 }
 
 $data = json_decode(file_get_contents('php://input'), true);

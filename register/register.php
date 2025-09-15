@@ -14,8 +14,6 @@ function addUser($data, $conn)
     $email = $data['email'] ?? null;
     $password = $data['password'] ?? null;
 
-    // Removed print_r($data) to ensure valid JSON response
-
     // First check if email is already in use if so succes = false and return a error message
     if (checkIfEmailExists($email, $conn)) {
         echo json_encode([
