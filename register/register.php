@@ -68,8 +68,12 @@ function checkLogin($data, $conn)
         echo json_encode([
             "success" => true,
             "message" => "Login successful",
-            "userId" => $user['id'], // Returns the user ID upon successful login to fetch the rest of user data
-            // "LoggedInData" => $loggedInData
+            "data" => [
+                "id" => $user['id'],
+                "firstName" => $user['firstname'],
+                "lastName" => $user['lastname'],
+                "email" => $user['email']
+            ],
         ]);
     } else {
         echo json_encode([

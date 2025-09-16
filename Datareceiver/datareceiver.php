@@ -12,25 +12,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+
 // Database connection
 $connection = mysqli_connect("localhost", "root", "", "tandartspraktijk");
 
 // Check if there us connection with database ifnot log error
 if (!$connection) {
     error_log("Connection failed: " . mysqli_connect_error());
-    die(json_encode(["success" => false, "message" => "Connection failed"]));
+    die(json_encode(["success" => false, "message" => "Connection with DB Failed"]));
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
 
+if (!$data) {
+    error_log("Invalid JSON input");
+    die(json_encode(["success" => false, "message" => "Invalid JSON input"]));
+}
+
 // Get the function name from the request
 $function = $data['function'] ?? '';
+
+$data = $data['data'] ?? [];
 
 // Check which function to call
 switch ($function) {
     case 'addUser':
         addUser($data, $connection);
-        error_log("Function called: " . $function);
         break;
     case 'loginUser':
         checkLogin($data, $connection);
