@@ -23,7 +23,7 @@ if (!$connection) {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
-
+    
 if (!$data) {
     error_log("Invalid JSON input");
     die(json_encode(["success" => false, "message" => "Invalid JSON input"]));
