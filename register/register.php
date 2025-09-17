@@ -72,7 +72,8 @@ function checkLogin($data, $conn)
                 "id" => $user['id'],
                 "firstName" => $user['firstname'],
                 "lastName" => $user['lastname'],
-                "email" => $user['email']
+                "email" => $user['email'],
+                "role" => $user['role']
             ],
         ]);
     } else {
