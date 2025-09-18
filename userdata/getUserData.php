@@ -1,24 +1,24 @@
 <?php
 function getUserData($data, $conn)
 {
-    $email = $data['email'] ?? null;
+    $userid = $data ?? null;
 
-    if (is_null($email)) {
+    if (is_null($userid)) {
         echo json_encode([
             "success" => false,
-            "message" => "Email niet gevonden"
+            "message" => "Userid niet gevonden"
         ]);
         return;
     }
 
-    $sql = "SELECT * FROM users WHERE email='$email'";
+    $sql = "SELECT * FROM users WHERE userid='$userid'";
 
     $result = mysqli_query($conn, $sql);
     $user = mysqli_fetch_assoc($result);
 
     if ($user) {
         echo json_encode([
-            "success" => true,
+            "isSuccess" => true,
             "data" => $user
         ]);
     } else {
