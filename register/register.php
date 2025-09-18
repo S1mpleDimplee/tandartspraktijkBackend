@@ -86,6 +86,7 @@ function checkLogin($data, $conn)
                 "email" => $user['email'],
                 "role" => $user['role'],
                 "userid" => $user['userid']
+
             ],
         ]);
     } else {
