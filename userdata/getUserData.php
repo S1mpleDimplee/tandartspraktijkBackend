@@ -5,7 +5,7 @@ function getUserData($data, $conn)
 
     if (is_null($userid)) {
         echo json_encode([
-            "success" => false,
+            "succes" => false,
             "message" => "Userid niet gevonden"
         ]);
         return;
@@ -18,12 +18,12 @@ function getUserData($data, $conn)
 
     if ($user) {
         echo json_encode([
-            "isSuccess" => true,
+            "succes" => true,
             "data" => $user
         ]);
     } else {
         echo json_encode([
-            "success" => false,
+            "succes" => false,
             "message" => "Geen gebruiker gevonden"
         ]);
     }
