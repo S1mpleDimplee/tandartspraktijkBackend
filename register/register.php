@@ -35,13 +35,24 @@ function addUser($data, $conn)
     // Hases the passowrd
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO users (firstname, lastname, email, password) VALUES ('$firstName', '$lastName', '$email', '$hashedPassword')";
 
+    $sql = "INSERT INTO users (firstname, lastname, email, password) VALUES ('$firstName', '$lastName', '$email', '$hashedPassword')";
     mysqli_query($conn, $sql);
+
+    // Get the user id after adding
+    $newId = mysqli_insert_id($conn);
+
+    // Create a format for the user id with the new ID
+    $userId = 'U-' . str_pad($newId, 5, '0', STR_PAD_LEFT);
+
+    // Update the user record with the generated userid
+    $updateSql = "UPDATE users SET userid='$userId' WHERE id=$newId";
+    mysqli_query($conn, $updateSql);
+
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
         "message" => mysqli_affected_rows($conn) > 0 ? "User registered successfully" : "Registration failed",
-        "userId" => mysqli_insert_id($conn)
+        "userId" => $userId
     ]);
 }
 
@@ -72,7 +83,10 @@ function checkLogin($data, $conn)
                 "id" => $user['id'],
                 "firstName" => $user['firstname'],
                 "lastName" => $user['lastname'],
-                "email" => $user['email']
+                "email" => $user['email'],
+                "role" => $user['role'],
+                "userid" => $user['userid']
+
             ],
         ]);
     } else {
@@ -82,5 +96,3 @@ function checkLogin($data, $conn)
         ]);
     }
 }
-
-?>
