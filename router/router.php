@@ -6,7 +6,7 @@ header("Content-Type: application/json");
 
 include '../register/register.php';
 include '../userdata/getUserData.php';
-
+include '../userdata/updateUserData.php';
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -46,8 +46,10 @@ switch ($function) {
     case 'fetchUserData':
         getUserData($data, $connection);
         break;
+    case 'updateUserData':
+        UpdateUserData($data, $connection);
+        break;
     default:
         echo json_encode(["success" => false, "message" => "Function not found"]);
         break;
 }
-?>
