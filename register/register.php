@@ -49,6 +49,9 @@ function addUser($data, $conn)
     $updateSql = "UPDATE users SET userid='$userId' WHERE id=$newId";
     mysqli_query($conn, $updateSql);
 
+    $addUserAdressSql = "INSERT INTO useradresses (userid) VALUES ('$userId')";
+    mysqli_query($conn, $addUserAdressSql);
+
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
         "message" => mysqli_affected_rows($conn) > 0 ? "User registered successfully" : "Registration failed",
