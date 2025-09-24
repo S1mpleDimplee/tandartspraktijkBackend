@@ -8,8 +8,9 @@ header("Content-Type: application/json");
 include '../register/register.php';
 include '../userdata/getUserData.php';
 include '../userdata/updateUserData.php';
-include '../tandarts/appointmentData.php';
-
+include '../getinfo/getcurrentdentist.php';
+include '../getinfo/getalldentists.php';
+include '../userdata/updatecurrentdentist.php';
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -47,6 +48,16 @@ switch ($function) {
         break;
     case 'updateUserData':
         UpdateUserData($data, $connection);
+        break;
+
+    case 'getCurrentDentist':
+        getCurrentDentistName($data['userid'] ?? '', $connection);
+        break;
+    case 'getAllDentists':
+        getAllDentists($connection);
+        break;
+    case 'updateCurrentDentist':
+        updatecurrentdentist($data['userid'] ?? '', $data['dentistid'] ?? null, $connection);
         break;
     case 'checkAppointments':
         $stats = checkAppointments($connection);
