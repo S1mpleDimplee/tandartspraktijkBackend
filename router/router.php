@@ -11,6 +11,8 @@ include '../userdata/updateUserData.php';
 include '../getinfo/getcurrentdentist.php';
 include '../getinfo/getalldentists.php';
 include '../userdata/updatecurrentdentist.php';
+include '../Treatments/getalltreatments.php';
+include '../appointments/createappointment.php';
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -37,12 +39,16 @@ $data = $data['data'] ?? [];
 
 // Router switch
 switch ($function) {
+
+    // register and login functions
     case 'addUser':
         addUser($data, $connection);
         break;
     case 'loginUser':
         checkLogin($data, $connection);
         break;
+
+    // user data functions
     case 'fetchUserData':
         getUserData($data, $connection);
         break;
@@ -50,11 +56,19 @@ switch ($function) {
         UpdateUserData($data, $connection);
         break;
 
+
+    // get functions
     case 'getCurrentDentist':
         getCurrentDentistName($data['userid'] ?? '', $connection);
         break;
     case 'getAllDentists':
         getAllDentists($connection);
+        break;
+    case 'createAppointment':
+        createAppointment($data, $connection);
+        break;
+    case 'getAllTreatments':
+        getAllTreatments($connection);
         break;
     case 'updateCurrentDentist':
         updatecurrentdentist($data['userid'] ?? '', $data['dentistid'] ?? null, $connection);
