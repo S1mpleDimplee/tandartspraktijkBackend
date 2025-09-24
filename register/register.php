@@ -35,7 +35,6 @@ function addUser($data, $conn)
     // Hases the passowrd
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-
     $sql = "INSERT INTO users (firstname, lastname, email, password) VALUES ('$firstName', '$lastName', '$email', '$hashedPassword')";
     mysqli_query($conn, $sql);
 
