@@ -11,6 +11,7 @@ include '../userdata/updateUserData.php';
 include '../getinfo/getcurrentdentist.php';
 include '../getinfo/getalldentists.php';
 include '../userdata/updatecurrentdentist.php';
+include '../tandarts/appointmentData.php';
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
