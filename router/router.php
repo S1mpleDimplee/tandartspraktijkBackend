@@ -13,6 +13,7 @@ include '../getinfo/getalldentists.php';
 include '../userdata/updatecurrentdentist.php';
 include '../Treatments/getalltreatments.php';
 include '../appointments/createappointment.php';
+include '../tandarts/getAppointmentsForWeek.php';
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -55,8 +56,6 @@ switch ($function) {
     case 'updateUserData':
         UpdateUserData($data, $connection);
         break;
-
-
     // get functions
     case 'getCurrentDentist':
         getCurrentDentistName($data['userid'] ?? '', $connection);
@@ -66,6 +65,9 @@ switch ($function) {
         break;
     case 'createAppointment':
         createAppointment($data, $connection);
+        break;
+    case 'getAppointmentsForWeek':
+        getAppointmentsForWeek($data['userid'] ?? null, $data['week'] ?? null, $data['year'] ?? null, $connection);
         break;
     case 'getAllTreatments':
         getAllTreatments($connection);
