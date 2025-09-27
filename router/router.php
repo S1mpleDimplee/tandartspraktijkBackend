@@ -10,10 +10,13 @@ include '../userdata/getUserData.php';
 include '../userdata/updateUserData.php';
 include '../getinfo/getcurrentdentist.php';
 include '../getinfo/getalldentists.php';
+include '../getinfo/getallpatients.php';
 include '../userdata/updatecurrentdentist.php';
 include '../Treatments/getalltreatments.php';
 include '../appointments/createappointment.php';
 include '../tandarts/getAppointmentsForWeek.php';
+include '../tandarts/appointmentData.php';
+
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -62,6 +65,9 @@ switch ($function) {
         break;
     case 'getAllDentists':
         getAllDentists($connection);
+        break;
+    case 'getAllPatients':
+        getAllPatients($connection);
         break;
     case 'createAppointment':
         createAppointment($data, $connection);
