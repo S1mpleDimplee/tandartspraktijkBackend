@@ -10,17 +10,18 @@ function createAppointment($data, $conn)
     $note = $data['note'] ?? null;
     $duration = $data['duration'] ?? null;
 
-    $sql = "INSERT INTO appointments (userid, dentistid, date, time, treatment, note, duration) VALUES ('$userid', '$dentistid', '$date', '$time', '$treatments', '$note', '$duration')";
+    $sql = "INSERT INTO appointments (userid, dentistid, date, time, treatment, note, duration) VALUES 
+    ('$userid', '$dentistid', '$date', '$time', '$treatments', '$note', '$duration')";
 
     if (mysqli_query($conn, $sql)) {
         echo json_encode([
             "success" => true,
-            "message" => "Appointment created successfully"
+            "message" => "Afspraak succesvol aangemaakt"
         ]);
     } else {
         echo json_encode([
             "success" => false,
-            "message" => "Failed to create appointment"
+            "message" => "Afspraak kon niet worden aangemaakt: " . mysqli_error($conn)
         ]);
     }
 }

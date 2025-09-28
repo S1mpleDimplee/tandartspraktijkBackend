@@ -51,7 +51,6 @@ switch ($function) {
     case 'loginUser':
         checkLogin($data, $connection);
         break;
-
     // user data functions
     case 'fetchUserData':
         getUserData($data, $connection);
