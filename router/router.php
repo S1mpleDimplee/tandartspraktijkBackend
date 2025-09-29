@@ -42,7 +42,6 @@ $data = $data['data'] ?? [];
 
 // Router switch
 switch ($function) {
-
     // register and login functions
     case 'addUser':
         addUser($data, $connection);
@@ -56,6 +55,9 @@ switch ($function) {
         break;
     case 'updateUserData':
         UpdateUserData($data, $connection);
+        break;
+    case 'getAppointmentsDataPatient':
+        getAppointmentsDataPatient($data['userid'] ?? '', $connection);
         break;
     // get functions
     case 'getCurrentDentist':
@@ -91,4 +93,3 @@ switch ($function) {
         echo json_encode(["success" => false, "message" => "Function not found"]);
         break;
 }
-?>
