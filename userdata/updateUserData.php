@@ -8,7 +8,6 @@ function UpdateUserData($userData, $conn)
     $country = $userData['country'] ?? null;
     $housenumber = $userData['housenumber'] ?? null;
     $addition = $userData['addition'] ?? null;
-
     $firstname = $userData['firstname'] ?? null;
     $lastname = $userData['lastname'] ?? null;
     $email = $userData['email'] ?? null;
@@ -22,7 +21,7 @@ function UpdateUserData($userData, $conn)
         ]);
         return;
     }
-    
+
 
     $updateAdresses = "UPDATE useradresses SET 
         streetname='$streetname', 
@@ -34,7 +33,7 @@ function UpdateUserData($userData, $conn)
     WHERE userid='$userid'";
 
     mysqli_query($conn, $updateAdresses);
-    
+
 
     $updateUser = "UPDATE users SET 
         firstname='$firstname', 
@@ -46,6 +45,6 @@ function UpdateUserData($userData, $conn)
 
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
-        "message" => mysqli_affected_rows($conn ) > 0 ? "User data updated successfully" : "Update failed or no changes made"
+        "message" => mysqli_affected_rows($conn) > 0 ? "User data updated successfully" : "Update failed or no changes made"
     ]);
 }
