@@ -1,10 +1,31 @@
 <?php
 
-function checkIfEmailExists($email, $conn)
+function isEmailRegistered($email, $conn)
 {
     $sql = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($conn, $sql);
     return mysqli_num_rows($result) > 0;
+}
+
+function isPasswordStrong($password, &$message)
+{
+    if (strlen($password) < 8) {
+        $message = "Wachtwoord moet minimaal 8 tekens bevatten";
+        return false;
+    }
+    if (!preg_match('/[A-Z]/', $password)) {
+        $message = "Wachtwoord moet minimaal één hoofdletter bevatten";
+        return false;
+    }
+    if (!preg_match('/[0-9]/', $password)) {
+        $message = "Wachtwoord moet minimaal één cijfer bevatten";
+        return false;
+    }
+    if (!preg_match('/[\W]/', $password)) {
+        $message = "Wachtwoord moet minimaal één speciaal teken bevatten";
+        return false;
+    }
+    return true;
 }
 
 function addUser($data, $conn)
@@ -15,10 +36,18 @@ function addUser($data, $conn)
     $password = $data['password'] ?? null;
 
     // First check if email is already in use if so succes = false and return a error message
-    if (checkIfEmailExists($email, $conn)) {
+    if (isEmailRegistered($email, $conn)) {
         echo json_encode([
             "success" => false,
             "message" => "Dit email adress is al geregistreerd, probeer een andere"
+        ]);
+        return;
+    }
+
+    if (!isPasswordStrong($password, $message)) {
+        echo json_encode([
+            "success" => false,
+            "message" => $message
         ]);
         return;
     }
@@ -64,18 +93,8 @@ function checkLogin($data, $conn)
     $password = $data['password'] ?? null;
 
     $sql = "SELECT * FROM users WHERE email='$email'";
-
     $result = mysqli_query($conn, $sql);
-
     $user = mysqli_fetch_assoc($result);
-
-    // $loggedInData = getLoginData($data, $conn);
-    // if (is_null($email)) {
-    //     echo json_encode([
-    //         "success" => false,
-    //         "message" => "Email bestaat niet"
-    //     ]);
-    // }
 
     if ($user && password_verify($password, $user['password'])) {
         echo json_encode([
@@ -88,7 +107,6 @@ function checkLogin($data, $conn)
                 "email" => $user['email'],
                 "role" => $user['role'],
                 "userid" => $user['userid']
-
             ],
         ]);
     } else {
