@@ -12,6 +12,7 @@ include '../userdata/updateUserData.php';
 include '../getinfo/getcurrentdentist.php';
 include '../getinfo/getalldentists.php';
 include '../getinfo/getallpatients.php';
+include '../getinfo/getallusers.php';
 include '../userdata/updatecurrentdentist.php';
 include '../Treatments/getalltreatments.php';
 include '../appointments/createappointment.php';
@@ -68,12 +69,16 @@ switch ($function) {
     case 'getcurrentdentist':
         getCurrentDentistName($data['userid'] ?? '', $connection);
         break;
+    case 'getallusers':
+        getAllUsers($connection);
+        break;
     case 'getalldentists':
         getAllDentists($connection);
         break;
     case 'getallpatients':
         getAllPatients($connection);
         break;
+
     case 'createappointment':
         createAppointment($data, $connection);
         break;
