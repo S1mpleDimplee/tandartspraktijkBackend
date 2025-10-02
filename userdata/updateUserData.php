@@ -45,6 +45,6 @@ function UpdateUserData($userData, $conn)
 
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
-        "message" => mysqli_affected_rows($conn) > 0 ? "User data updated successfully" : "Update failed or no changes made"
+        "message" => mysqli_affected_rows($conn) > 0 ? "Gebruiker informatie succesvol bijgewerkt" : "Er zijn geen aanpassingen gedaan"
     ]);
 }

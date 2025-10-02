@@ -25,8 +25,11 @@ function getAllUserData($data, $conn)
     $treatments = [];
     while ($row = mysqli_fetch_assoc($treatmentResult)) {
         $treatments[] = [
+            'userid' => $row['userid'],
             'treatment' => $row['treatment'],
-            'note' => $row['note']
+            'note' => $row['note'],
+            'id' => $row['id'],
+            'treatmentdate' => $row['treatmentdate']
         ];
     }
 

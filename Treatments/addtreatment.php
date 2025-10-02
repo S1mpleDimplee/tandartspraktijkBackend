@@ -6,10 +6,10 @@ function addTreatment($data, $conn)
     $treatment_name = $data['treatment'] ?? null;
     $treatment_description = $data['note'] ?? null;
 
-    if (is_null($userid) || is_null($treatment_name)) {
+    if (is_null($userid) || $treatment_name == "") {
         echo json_encode([
             "success" => false,
-            "message" => "Invalid input"
+            "message" => "Niet alle vereiste velden zijn ingevuld"
         ]);
         return;
     }

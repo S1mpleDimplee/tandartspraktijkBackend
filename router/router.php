@@ -5,20 +5,22 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 // Include other backend functions
-include '../register/register.php';
-include '../userdata/getUserData.php';
-include '../userdata/getAllUserData.php';
-include '../userdata/updateUserData.php';
-include '../getinfo/getcurrentdentist.php';
+include '../Treatments/addtreatment.php';
+include '../Treatments/removetreatment.php';
+include '../Treatments/edittreatment.php';
+include '../Treatments/getalltreatments.php';
+include '../appointments/createappointment.php';
 include '../getinfo/getalldentists.php';
 include '../getinfo/getallpatients.php';
 include '../getinfo/getallusers.php';
-include '../userdata/updatecurrentdentist.php';
-include '../Treatments/getalltreatments.php';
-include '../appointments/createappointment.php';
-include '../tandarts/getAppointmentsForWeek.php';
+include '../getinfo/getcurrentdentist.php';
+include '../register/register.php';
 include '../tandarts/appointmentData.php';
-include '../Treatments/addtreatment.php';
+include '../tandarts/getAppointmentsForWeek.php';
+include '../userdata/getAllUserData.php';
+include '../userdata/getUserData.php';
+include '../userdata/updateUserData.php';
+include '../userdata/updatecurrentdentist.php';
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -52,45 +54,42 @@ switch ($function) {
     case 'loginuser':
         checkLogin($data, $connection);
         break;
+
     // user data functions
-    case 'fetchuserdata':
-        getUserData($data, $connection);
-        break;
     case 'fetchalluserdata':
         getAllUserData($data, $connection);
         break;
-    case 'updateuserdata':
-        UpdateUserData($data, $connection);
+    case 'fetchuserdata':
+        getUserData($data, $connection);
         break;
     case 'getappointmentsdatapatient':
         getAppointmentsDataPatient($data['userid'] ?? '', $connection);
         break;
+    case 'updateuserdata':
+        UpdateUserData($data, $connection);
+        break;
+
     // get functions
-    case 'getcurrentdentist':
-        getCurrentDentistName($data['userid'] ?? '', $connection);
-        break;
-    case 'getallusers':
-        getAllUsers($connection);
-        break;
     case 'getalldentists':
         getAllDentists($connection);
         break;
     case 'getallpatients':
         getAllPatients($connection);
         break;
-
-    case 'createappointment':
-        createAppointment($data, $connection);
-        break;
-    case 'getappointmentsforweek':
-        getAppointmentsForWeek($data['userid'] ?? null, $data['week'] ?? null, $data['year'] ?? null, $connection);
+    case 'getallusers':
+        getAllUsers($connection);
         break;
     case 'getalltreatments':
         getAllTreatments($connection);
         break;
-    case 'updatecurrentdentist':
-        updatecurrentdentist($data['userid'] ?? '', $data['dentistid'] ?? null, $connection);
+    case 'getappointmentsforweek':
+        getAppointmentsForWeek($data['userid'] ?? null, $data['week'] ?? null, $data['year'] ?? null, $connection);
         break;
+    case 'getcurrentdentist':
+        getCurrentDentistName($data['userid'] ?? '', $connection);
+        break;
+
+    // appointment functions
     case 'checkappointments':
         $stats = checkAppointments($connection);
         echo json_encode([
@@ -99,15 +98,23 @@ switch ($function) {
             "data" => $stats
         ]);
         break;
+    case 'createappointment':
+        createAppointment($data, $connection);
+        break;
 
+    // treatment functions
     case 'addtreatment':
         addTreatment($data, $connection);
         break;
-    case 'updatetreatment':
-        break;
     case 'deletetreatment':
+        removeTreatment($data, $connection);
         break;
+    case 'updatetreatment':
+        editTreatment($data, $connection);
+        break;
+
     default:
         echo json_encode(["success" => false, "message" => "Functie niet gevonden"]);
         break;
 }
+
