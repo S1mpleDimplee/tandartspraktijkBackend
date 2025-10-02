@@ -4,12 +4,16 @@ header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
+// Dynamically get the current file name
+$currentFileName = basename(__FILE__);
+
 // Include other backend functions
 include '../Treatments/addtreatment.php';
 include '../Treatments/removetreatment.php';
 include '../Treatments/edittreatment.php';
 include '../Treatments/getalltreatments.php';
 include '../appointments/createappointment.php';
+include '../appointments/getappointmentdata.php';
 include '../getinfo/getalldentists.php';
 include '../getinfo/getallpatients.php';
 include '../getinfo/getallusers.php';
@@ -21,6 +25,7 @@ include '../userdata/getAllUserData.php';
 include '../userdata/getUserData.php';
 include '../userdata/updateUserData.php';
 include '../userdata/updatecurrentdentist.php';
+
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -101,7 +106,9 @@ switch ($function) {
     case 'createappointment':
         createAppointment($data, $connection);
         break;
-
+    case 'getappointmentdata':
+        getAppointmentData($data, $connection);
+        break;
     // treatment functions
     case 'addtreatment':
         addTreatment($data, $connection);
@@ -117,4 +124,3 @@ switch ($function) {
         echo json_encode(["success" => false, "message" => "Functie niet gevonden"]);
         break;
 }
-
