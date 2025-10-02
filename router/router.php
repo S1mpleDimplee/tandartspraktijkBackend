@@ -8,6 +8,7 @@ header("Content-Type: application/json");
 $currentFileName = basename(__FILE__);
 
 // Include other backend functions
+
 include '../Treatments/addtreatment.php';
 include '../Treatments/removetreatment.php';
 include '../Treatments/edittreatment.php';
@@ -26,6 +27,7 @@ include '../userdata/getUserData.php';
 include '../userdata/updateUserData.php';
 include '../userdata/updatecurrentdentist.php';
 include '../userdata/updateUserRole.php';
+
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

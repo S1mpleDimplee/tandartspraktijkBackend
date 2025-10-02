@@ -1,5 +1,7 @@
 <?php
 
+
+
 function UpdateUserData($userData, $conn)
 {
     $streetname = $userData['streetname'] ?? null;
@@ -22,6 +24,13 @@ function UpdateUserData($userData, $conn)
         return;
     }
 
+    if (isEmailRegistered($email, $conn)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Dit email adress is al geregistreerd, probeer een andere email adress"
+        ]);
+        return;
+    }
 
     $updateAdresses = "UPDATE useradresses SET 
         streetname='$streetname', 
