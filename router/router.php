@@ -25,6 +25,7 @@ include '../userdata/getAllUserData.php';
 include '../userdata/getUserData.php';
 include '../userdata/updateUserData.php';
 include '../userdata/updatecurrentdentist.php';
+include '../userdata/updateUserRole.php';
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -72,6 +73,9 @@ switch ($function) {
         break;
     case 'updateuserdata':
         UpdateUserData($data, $connection);
+        break;
+    case 'updateuserrole':
+        updateUserRole($data, $connection);
         break;
 
     // get functions
