@@ -22,7 +22,7 @@ function isPasswordStrong($password, &$message)
         return false;
     }
     if (!preg_match('/[\W]/', $password)) {
-        $message = "Wachtwoord moet minimaal één speciaal teken bevatten";
+        $message = "Wachtwoord moet minimaal één speciaal teken bevatten zoals !, @, #, $, -, etc.";
         return false;
     }
     return true;
@@ -39,7 +39,7 @@ function addUser($data, $conn)
     if (isEmailRegistered($email, $conn)) {
         echo json_encode([
             "success" => false,
-            "message" => "Dit email adress is al geregistreerd, probeer een andere"
+            "message" => "Dit email adress is al geregistreerd, probeer een andere email adress"
         ]);
         return;
     }
@@ -84,7 +84,7 @@ function addUser($data, $conn)
 
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
-        "message" => mysqli_affected_rows($conn) > 0 ? "User registered successfully" : "Registration failed",
+        "message" => mysqli_affected_rows($conn) > 0 ? "Account is succesvol aangemaakt" : "Registratie mislukt",
         "userId" => $userId
     ]);
 }

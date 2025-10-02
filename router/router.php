@@ -36,15 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Database connection
 $connection = mysqli_connect("localhost", "root", "", "tandartspraktijk");
 if (!$connection) {
-    error_log("Connection failed: " . mysqli_connect_error());
-    die(json_encode(["success" => false, "message" => "Connection with DB Failed"]));
+    error_log("Connectie met de database is mislukt contacteer ons via tandartspraktijkhengelo@gmail.com");
+    die(json_encode(["success" => false, "message" => "Connectie met de database is mislukt contacteer ons via tandartspraktijkhengelo@gmail.com"]));
 }
 
 // Read POST data
 $data = json_decode(file_get_contents('php://input'), true);
 if (!$data) {
-    error_log("Invalid JSON input");
-    die(json_encode(["success" => false, "message" => "Invalid JSON input"]));
+    error_log("Er is iets fout gegaan contacteer ons via tandartspraktijkhengelo@gmail.com");
+    die(json_encode(["success" => false, "message" => "Er is iets fout gegaan contacteer ons via tandartspraktijkhengelo@gmail.com"]));
 }
 
 // Get function name

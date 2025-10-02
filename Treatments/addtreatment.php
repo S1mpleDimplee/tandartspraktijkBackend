@@ -18,12 +18,12 @@ function addTreatment($data, $conn)
     if (mysqli_query($conn, $sql)) {
         echo json_encode([
             "success" => true,
-            "message" => "Treatment added successfully"
+            "message" => "De behandeling $treatment_name is succesvol toegevoegd"
         ]);
     } else {
         echo json_encode([
             "success" => false,
-            "message" => "Error adding treatment: " . mysqli_error($conn)
+            "message" => "Er is een fout opgetreden bij het toevoegen van de behandeling: " . mysqli_error($conn)
         ]);
     }
 }

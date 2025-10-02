@@ -8,7 +8,7 @@ function removeTreatment($data, $conn)
     if (is_null($userid) || is_null($treatmentid)) {
         echo json_encode([
             "success" => false,
-            "message" => "Invalid input"
+            "message" => "Ongeldige waarde ingevoerd"
         ]);
         return;
     }
