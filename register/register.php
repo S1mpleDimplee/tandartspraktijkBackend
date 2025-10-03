@@ -90,8 +90,11 @@ function checkLogin($data, $conn)
     $email = $data['email'] ?? null;
     $password = $data['password'] ?? null;
 
-    $sql = "SELECT *, p.password FROM users u JOIN userpasswords p ON u.userid = p.userid WHERE u.email='$email'";
-    $result = mysqli_query($conn, $sql);
+    $sql = "SELECT u.*, p.password FROM users u JOIN userpasswords p ON u.userid = p.userid WHERE u.email = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
     $user = mysqli_fetch_assoc($result);
 
     if ($user && password_verify($password, $user['password'])) {
