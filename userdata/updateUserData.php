@@ -1,5 +1,7 @@
 <?php
 
+
+
 function UpdateUserData($userData, $conn)
 {
     $streetname = $userData['streetname'] ?? null;
@@ -22,6 +24,13 @@ function UpdateUserData($userData, $conn)
         return;
     }
 
+    if (isEmailRegistered($email, $conn)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Dit email adress is al geregistreerd, probeer een andere email adress"
+        ]);
+        return;
+    }
 
     $updateAdresses = "UPDATE useradresses SET 
         streetname='$streetname', 
@@ -45,6 +54,6 @@ function UpdateUserData($userData, $conn)
 
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
-        "message" => mysqli_affected_rows($conn) > 0 ? "User data updated successfully" : "Update failed or no changes made"
+        "message" => mysqli_affected_rows($conn) > 0 ? "Gebruiker informatie succesvol bijgewerkt" : "Er zijn geen aanpassingen gedaan"
     ]);
 }
