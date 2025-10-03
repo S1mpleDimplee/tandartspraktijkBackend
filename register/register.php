@@ -1,11 +1,7 @@
 <?php
 
-function isEmailRegistered($email, $conn)
-{
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($conn, $sql);
-    return mysqli_num_rows($result) > 0;
-}
+include_once('../functions/isEmailRegistered.php'); 
+
 
 function isPasswordStrong($password, &$message)
 {
@@ -22,7 +18,7 @@ function isPasswordStrong($password, &$message)
         return false;
     }
     if (!preg_match('/[\W]/', $password)) {
-        $message = "Wachtwoord moet minimaal één speciaal teken bevatten";
+        $message = "Wachtwoord moet minimaal één speciaal teken bevatten zoals !, @, #, $, -, etc.";
         return false;
     }
     return true;
@@ -39,7 +35,7 @@ function addUser($data, $conn)
     if (isEmailRegistered($email, $conn)) {
         echo json_encode([
             "success" => false,
-            "message" => "Dit email adress is al geregistreerd, probeer een andere"
+            "message" => "Dit email adress is al geregistreerd, probeer een andere email adress"
         ]);
         return;
     }
@@ -64,7 +60,7 @@ function addUser($data, $conn)
     // Hases the passowrd
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO users (firstname, lastname, email, password) VALUES ('$firstName', '$lastName', '$email', '$hashedPassword')";
+    $sql = "INSERT INTO users (firstname, lastname, email) VALUES ('$firstName', '$lastName', '$email')";
     mysqli_query($conn, $sql);
 
     // Get the user id after adding
@@ -73,7 +69,9 @@ function addUser($data, $conn)
     // Create a format for the user id with the new ID
     $userId = 'U-' . str_pad($newId, 5, '0', STR_PAD_LEFT);
 
-    // Update the user record with the generated userid
+    $passwordSql = "INSERT INTO userpasswords (userid, password) VALUES ('$userId', '$hashedPassword')";
+    mysqli_query($conn, $passwordSql);
+
     $updateSql = "UPDATE users SET userid='$userId' WHERE id=$newId";
     mysqli_query($conn, $updateSql);
 
@@ -82,7 +80,7 @@ function addUser($data, $conn)
 
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
-        "message" => mysqli_affected_rows($conn) > 0 ? "User registered successfully" : "Registration failed",
+        "message" => mysqli_affected_rows($conn) > 0 ? "Account is succesvol aangemaakt" : "Registratie mislukt",
         "userId" => $userId
     ]);
 }
@@ -92,7 +90,7 @@ function checkLogin($data, $conn)
     $email = $data['email'] ?? null;
     $password = $data['password'] ?? null;
 
-    $sql = "SELECT * FROM users WHERE email='$email'";
+    $sql = "SELECT *, p.password FROM users u JOIN userpasswords p ON u.userid = p.userid WHERE u.email='$email'";
     $result = mysqli_query($conn, $sql);
     $user = mysqli_fetch_assoc($result);
 
