@@ -1,6 +1,6 @@
 <?php
 
-include_once('../functions/isEmailRegistered.php'); 
+include_once('../functions/isEmailRegistered.php');
 
 
 function isPasswordStrong($password, &$message)
@@ -40,13 +40,21 @@ function addUser($data, $conn)
         return;
     }
 
-    if (!isPasswordStrong($password, $message)) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode([
             "success" => false,
-            "message" => $message
+            "message" => "Ongeldig email adres"
         ]);
         return;
     }
+
+    // if (!isPasswordStrong($password, $message)) {
+    //     echo json_encode([
+    //         "success" => false,
+    //         "message" => $message
+    //     ]);
+    //     return;
+    // }
 
     // If any of the fields are empty return an error message
     if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {

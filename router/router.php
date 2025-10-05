@@ -14,6 +14,8 @@ include '../Treatments/removetreatment.php';
 include '../Treatments/edittreatment.php';
 include '../Treatments/getalltreatments.php';
 include '../appointments/createappointment.php';
+include '../appointments/deleteappointment.php';
+include '../appointments/editappointment.php';
 include '../appointments/getappointmentdata.php';
 include '../getinfo/getalldentists.php';
 include '../getinfo/getallpatients.php';
@@ -111,6 +113,12 @@ switch ($function) {
         break;
     case 'createappointment':
         createAppointment($data, $connection);
+        break;
+    case 'deleteappointment':
+        deleteAppointment($data, $connection);
+        break;
+    case 'editappointment':
+        editAppointment($data, $connection);
         break;
     case 'getappointmentdata':
         getAppointmentData($data, $connection);
