@@ -14,8 +14,33 @@ function updateUserRole($data, $conn)
         return;
     }
 
+    $getPreviousRole = "SELECT role FROM users WHERE userid='$userid'";
+    if ($result = mysqli_query($conn, $getPreviousRole)) {
+        $user = mysqli_fetch_assoc($result);
+        $previousRole = $user['role'] ?? null;
+    } else {
+        echo json_encode([
+            "success" => false,
+            "message" => "Er is een fout opgetreden om de tandarts om te zetten naar een andere rol: " . mysqli_error($conn)
+        ]);
+        return;
+    }
+
     $sql = "UPDATE users SET role='$newRole' WHERE userid='$userid'";
+
     if (mysqli_query($conn, $sql)) {
+
+        if ($previousRole === "1") {
+            $deleteAppointmentsSql = "DELETE FROM appointments WHERE dentistid='$userid' AND date >= CURDATE()";
+
+            mysqli_query($conn, $deleteAppointmentsSql);
+
+            echo json_encode([
+                "success" => true,
+                "message" => "Tandarts is nu een " . $rolenames[$newRole]
+            ]);
+            return;
+        }
 
         echo json_encode([
             "success" => true,
