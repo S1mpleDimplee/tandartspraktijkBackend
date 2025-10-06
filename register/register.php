@@ -48,13 +48,13 @@ function addUser($data, $conn)
         return;
     }
 
-    // if (!isPasswordStrong($password, $message)) {
-    //     echo json_encode([
-    //         "success" => false,
-    //         "message" => $message
-    //     ]);
-    //     return;
-    // }
+    if (!isPasswordStrong($password, $message)) {
+        echo json_encode([
+            "success" => false,
+            "message" => $message
+        ]);
+        return;
+    }
 
     // If any of the fields are empty return an error message
     if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
