@@ -81,7 +81,9 @@ switch ($function) {
     case 'updateuserrole':
         updateUserRole($data, $connection);
         break;
-
+    case 'updatecurrentdentist':
+        updatecurrentdentist($data['userid'] ?? '', $data['dentistid'] ?? '', $connection);
+        break;
     // get functions
     case 'getalldentists':
         getAllDentists($connection);

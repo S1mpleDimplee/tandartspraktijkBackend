@@ -13,6 +13,7 @@ function UpdateUserData($userData, $conn)
     $firstname = $userData['firstname'] ?? null;
     $lastname = $userData['lastname'] ?? null;
     $email = $userData['email'] ?? null;
+    $phonenumber = $userData['phonenumber'] ?? null;
 
     $userid = $userData['userid'] ?? null;
 
@@ -47,7 +48,8 @@ function UpdateUserData($userData, $conn)
     $updateUser = "UPDATE users SET 
         firstname='$firstname', 
         lastname='$lastname', 
-        email='$email'
+        email='$email',
+        phonenumber='$phonenumber'
     WHERE userid='$userid'";
 
     mysqli_query($conn, $updateUser);
@@ -55,5 +57,5 @@ function UpdateUserData($userData, $conn)
     echo json_encode([
         "success" => mysqli_affected_rows($conn) > 0,
         "message" => mysqli_affected_rows($conn) > 0 ? "Gebruiker informatie succesvol bijgewerkt" : "Er zijn geen aanpassingen gedaan"
-    ]);
+    ]); 
 }
